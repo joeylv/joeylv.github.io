@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Jiahua Chen">
+    <meta name="description" content="https://unknwon.io/">
+    <meta name="keywords" content="blog,developer,personal">
+    
+    <meta property="og:site_name" content="UNKNWON">
+    <meta property="og:title" content="
+  Gogs: Pull Request, Wiki and New Design - UNKNWON
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://unknwon.io/posts/151212_gogs-pull-request-wiki-and-new-design/">
+    <meta property="og:image" content="https://unknwon.io/&lt;no value&gt;">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="https://unknwon.io/posts/151212_gogs-pull-request-wiki-and-new-design/">
+    <meta name="twitter:image" content="https://unknwon.io/&lt;no value&gt;">
+
+    <base href="https://unknwon.io/">
+    <title>
+  Gogs: Pull Request, Wiki and New Design - UNKNWON
+</title>
+
+    <link rel="canonical" href="https://unknwon.io/posts/151212_gogs-pull-request-wiki-and-new-design/">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="//cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
+    <link rel="stylesheet" href="https://unknwon.io/css/style.min.css">
+
+    
+
+    
+      <link rel="stylesheet" href="https://unknwon.io/css/custom.css">
+    
+
+    <link rel="icon" type="image/png" href="https://unknwon.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://unknwon.io/images/favicon-16x16.png" sizes="16x16">
+
+    
+
+    <meta name="generator" content="Hugo 0.50" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">UNKNWON</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="https://unknwon.io/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="https://unknwon.io/about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">Gogs: Pull Request, Wiki and New Design</h1>
+      <h2 class="date">December 12, 2015</h2>
+
+      
+    </header>
+
+    
+
+<blockquote>
+<p>This post is published corresponding to the <a href="https://gogs.io">Gogs - Go Git Service</a> <code>v0.8.0</code> release.</p>
+</blockquote>
+
+<p>It has been over a year since last release post, mainly because there are too much work undergoing and plans are completely outdated. Fortunately, most of things finally get done in this big release.</p>
+
+<p>From last post of release (<code>v0.5.0</code>), almost 1.8k commits with tons of improvements, bug fixes, new features and others are added to Gogs. Especially top-wanted features like <strong>pull request</strong>, <strong>repository wiki</strong> and <strong>builtin SSH server</strong>. Besides, all pages are now under new Semantic UI theme with <strong>completely redesigned issue tracker</strong>, and many people have given us positive feedback. The last thing I never forget to mention is Gogs now has 182 contributors from the community.</p>
+
+<h3 id="upgrade-to-0-8">Upgrade to 0.8</h3>
+
+<ul>
+<li>Gogs has auto-migration since <code>0.5.x</code>, so all upgrades should happen automatically and you do not need to take care of it.</li>
+<li>&hellip; However, starting from <code>0.8</code> release, Gogs no longer supports auto-migration for installations that are lower than <code>0.6.0</code>. Therefore, if you&rsquo;re using version before <code>0.6.0</code>, you have to run any of earlier version before <code>0.8.0</code> once, then upgrade to <code>0.8.0</code>.</li>
+<li>Upgrade steps are available in:
+
+<ul>
+<li><a href="https://gogs.io/docs/upgrade/upgrade_from_binary">Upgrade from binary</a></li>
+<li><a href="https://gogs.io/docs/upgrade/upgrade_from_source">Upgrade from source</a></li>
+</ul></li>
+</ul>
+
+<h3 id="pull-request">Pull Request</h3>
+
+<p>The No.1 wanted feature has finally arrived in Gogs, and it has been tested with several releases since <code>0.6.9</code>. It is good to use now, but not perfect yet, such as you can&rsquo;t make a pull request inside same repository, and no review comments support.</p>
+
+<p>Many underlying improvements can be applied as well, dirty works needed to be cleared out.</p>
+
+<p><img src="/img/151212/Snip20151211_7.png" alt="" /></p>
+
+<h3 id="wiki">Wiki</h3>
+
+<p>You can now edit your wiki pages via online Markdown editor or edit locally and push to Gogs.</p>
+
+<p><img src="/img/151212/Snip20151211_8.png" alt="" /></p>
+
+<h3 id="builtin-ssh-server">Builtin SSH Server</h3>
+
+<p>Few people ask why Gogs even need this. Let me answer it once forever:</p>
+
+<p>Even though Gogs has gained many advantages by developing based on Go, such as low resource usage and fast response, but primary goal of Gogs is still very simple, which provide painless Git hosting solution. Embed a SSH server means an external SSH server is no longer a hard requirement and Gogs will not mess up with <code>authorized_keys</code> file any more. Last but not the least, it works on Windows!</p>
+
+<h3 id="issue-tracker">Issue Tracker</h3>
+
+<p>Dozens of bug fixes by redesigned issue tracker, you are also able to use emoji and edit comments now.</p>
+
+<p><img src="/img/151212/Snip20151211_9.png" alt="" /></p>
+
+<p><img src="/img/151212/Snip20151211_10.png" alt="" /></p>
+
+<h3 id="others">Others</h3>
+
+<ul>
+<li>You can push <a href="https://github.com/torvalds/linux">linux</a> to Gogs now.</li>
+<li>Limited APIs are available at <a href="https://github.com/gogits/go-gogs-client/wiki">wiki</a>.</li>
+<li>HTTPS secured <a href="https://dl.gogs.io">downloads</a>.</li>
+<li>Discussion <a href="http://forum.gogs.io/">forum</a>.</li>
+<li>Official support for <a href="https://github.com/gogits/gogs/tree/master/docker">Docker</a> with only 40MB image size.</li>
+<li>More and more <a href="https://github.com/gogits/gogs/tree/master#deploy-to-cloud">cloud platforms</a>, <a href="https://github.com/gogits/gogs/tree/master#product-support">products</a>, <a href="https://github.com/gogits/gogs/tree/master#software-and-service-support">services and software</a> support.</li>
+</ul>
+
+<h3 id="final-bits">Final Bits</h3>
+
+<p>Can&rsquo;t thank enough to the all the people who follow a long way to this point. You are awesome!</p>
+
+<p>Thank you for supporting Gogs and taking time to read this post, if you have any advice or feedback, please contact us on <a href="https://github.com/gogits/gogs/issues?q=is%3Aopen">GitHub</a>.</p>
+
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "landofunknown" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+    </main>
+
+    
+
+  <script src="https://unknwon.io/js/app.js"></script>
+  
+  </body>
+</html>

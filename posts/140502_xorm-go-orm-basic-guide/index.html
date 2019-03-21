@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Jiahua Chen">
+    <meta name="description" content="https://unknwon.io/">
+    <meta name="keywords" content="blog,developer,personal">
+    
+    <meta property="og:site_name" content="UNKNWON">
+    <meta property="og:title" content="
+  XORM - Go ORM: basic guide - UNKNWON
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://unknwon.io/posts/140502_xorm-go-orm-basic-guide/">
+    <meta property="og:image" content="https://unknwon.io/&lt;no value&gt;">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="https://unknwon.io/posts/140502_xorm-go-orm-basic-guide/">
+    <meta name="twitter:image" content="https://unknwon.io/&lt;no value&gt;">
+
+    <base href="https://unknwon.io/">
+    <title>
+  XORM - Go ORM: basic guide - UNKNWON
+</title>
+
+    <link rel="canonical" href="https://unknwon.io/posts/140502_xorm-go-orm-basic-guide/">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="//cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
+    <link rel="stylesheet" href="https://unknwon.io/css/style.min.css">
+
+    
+
+    
+      <link rel="stylesheet" href="https://unknwon.io/css/custom.css">
+    
+
+    <link rel="icon" type="image/png" href="https://unknwon.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://unknwon.io/images/favicon-16x16.png" sizes="16x16">
+
+    
+
+    <meta name="generator" content="Hugo 0.50" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">UNKNWON</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="https://unknwon.io/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="https://unknwon.io/about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">XORM - Go ORM: basic guide</h1>
+      <h2 class="date">May 2, 2014</h2>
+
+      
+    </header>
+
+    
+
+<h2 id="introduction">Introduction</h2>
+
+<p>xorm is a Go ORM which provides rich functionality with very simple APIs. It supports all main stream databases, including MySQL, PostgreSQL, SQLite3 and MsSQL. It allows you use chain operations and combine with raw SQL statements. Moreover, it has session that supports transactions to make your business logic safe.</p>
+
+<h2 id="installation">Installation</h2>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4">go get github.com/go-xorm/xorm</pre></div>
+<h3 id="api-documentation">API Documentation</h3>
+
+<p>Please visit <a href="http://gowalker.org/github.com/go-xorm/xorm">Go Walker</a>.</p>
+
+<h2 id="basic-usages">Basic Usages</h2>
+
+<p><a href="https://gist.github.com/Unknwon/03c4e9dec8ea97b3a010">Sample Code</a></p>
+
+<h3 id="define-model">Define model</h3>
+
+<p>You have to define model before using the ORMs in Go. The model is just a normal struct with tag of field in Go. In the sample code, we use following code to define a account model:</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#fff;font-weight:bold">type</span> Account <span style="color:#fff;font-weight:bold">struct</span> {
+	Id      <span style="color:#fff;font-weight:bold">int64</span>
+	Name    <span style="color:#fff;font-weight:bold">string</span> <span style="color:#0ff;font-weight:bold">`xorm:&#34;unique&#34;`</span>
+	Balance <span style="color:#fff;font-weight:bold">float64</span>
+	Version <span style="color:#fff;font-weight:bold">int</span> <span style="color:#0ff;font-weight:bold">`xorm:&#34;version&#34;`</span> <span style="color:#007f7f">// Optimistic Locking
+</span><span style="color:#007f7f"></span>}</code></pre></div>
+<p>For convience, the field named <code>Id</code> and has type <code>int64</code> will automatically become the primary key. If you want to use other fields, you need to set tag <code>pk</code> to tell xorm.</p>
+
+<p>Field <code>Name</code>&rsquo;s tag uses <code>unique</code> to make record value unique in the table, in this case, one user name can only appear once.</p>
+
+<p>The last field is the Optimistic Locking, we&rsquo;ll get into it later.</p>
+
+<p>According to the visibility rule of Go, all fields have to be capitalized; otherwise, it leads to panic when ORM is reflecting on the struct.</p>
+
+<p><del>The sample code is too simple to list all tags that xorm supports, you can see the full list <a href="https://github.com/go-xorm/xorm/blob/master/docs/QuickStart.md#24column-defenition">here</a>.</del></p>
+
+<h3 id="create-orm-engine">Create ORM engine</h3>
+
+<p>After you define the model, it&rsquo;s time to create the ORM engine for your application. In this step, you need to specify what database driver you use, along with its connection information(database host, user name and password). In the sample code, we use SQLite3, so the database file path is all we need:</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">x, err = xorm.NewEngine(<span style="color:#0ff;font-weight:bold">&#34;sqlite3&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;./bank.db&#34;</span>)</code></pre></div>
+<p>Go asks for registering database driver before using it, so all drivers will register themselves in <code>init</code> function. Similarly, this step cannot be omit when we use ORM.</p>
+
+<p>There are many database drivers exist, one ORM usually supports one for each database. You&rsquo;d better check the documentation of the ORM you choose to use and see what database drivers it supports. <del>In this case, we can find 5 database drivers that xorm supports <a href="https://github.com/go-xorm/xorm/blob/master/docs/QuickStart.md#1create-orm-engine">here</a>.</del></p>
+
+<p>The following code registers the database driver:</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#fff;font-weight:bold">import</span> (
+	_ <span style="color:#0ff;font-weight:bold">&#34;github.com/mattn/go-sqlite3&#34;</span>
+)</code></pre></div>
+<p>Add underscore before import path means only execute the <code>init</code> function of that package and nothing else. Therefore, you will not get error like &ldquo;import but not used&rdquo;.</p>
+
+<h3 id="auto-sync-table">Auto-sync table</h3>
+
+<p>xorm has an awesome feature that incremental synchronize from models to database tables automatically. What does that mean? Well, it checks database tables and updates if needed when tables are not same as models you defined. Moreover, it&rsquo;s incremental operation, which means xorm will not delete any column if you delete a field or change the name of field, and keeps it where it was, then create a new column. Same rule will be applied when you change the tag of any field.</p>
+
+<p>The following code does the job of enabling this feature:</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">err = x.Sync(<span style="color:#fff;font-weight:bold">new</span>(Account))</code></pre></div>
+<p>Pass all models to method <code>Sync</code>. In the sample code, there is only one model called <code>Account</code>. The reason we use <code>new()</code> here is because reflection works on instance of a struct in order to help ORM gets fields and their tags.</p>
+
+<h3 id="add-delete-and-update">Add, delete and update</h3>
+
+<p>Let&rsquo;s take a look at how to use xorm to do add, delete and update operations.</p>
+
+<h4 id="add-record">Add record</h4>
+
+<p>To insert a new record, the record must not exist, error occurs otherwise:</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">_, err := x.Insert(&amp;Account{Name: name, Balance: balance})</code></pre></div>
+<h4 id="delete-record">Delete record</h4>
+
+<p>Delete a record:</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">_, err := x.Delete(&amp;Account{Id: id})</code></pre></div>
+<p>Method <code>Delete</code> use the parameter as a query condition, they delete all records that match the condition. In the sample code, we only give the <code>Id</code> field of <code>Account</code>, then xorm only deletes the record that has that <code>ID</code>. However, in the cases there are more than one records has the same <code>ID</code>, all of them will be deleted.</p>
+
+<h4 id="get-and-update-record">Get and update record</h4>
+
+<p>To update a record, the record must exist. Thus, we have to get the record before modifying it:</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">a := &amp;Account{}
+has, err := x.Id(id).Get(a)</code></pre></div>
+<p>Method <code>Get</code> returns only one record. Like delete operation, the variable <code>a</code> is also the query condition. But the goodness of xorm is that it also allows you use chain operations to specify condition, just like the <code>Id</code> method we use here.</p>
+
+<p>The method returns two values, one is <code>bool</code> type to indicates there is a record or not, another one is <code>error</code> type to show if any error occurs.</p>
+
+<p>After we got the record, we now need to make some changes and update back to database:</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">a.Balance += deposit
+_, err = x.Update(a)</code></pre></div>
+<p>You must pass a pointer of variable as first parameter to method <code>Update</code>. It accepts second parameter as query condition as well.</p>
+
+<h3 id="get-batch-of-records">Get batch of records</h3>
+
+<p>In some situations, we need to get a list of records from database and do some ordering.</p>
+
+<p>So the corresponding method of <code>Get</code> method is the <code>Find</code> method for getting all records which match the query condition:</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">err = x.Desc(<span style="color:#0ff;font-weight:bold">&#34;balance&#34;</span>).Find(&amp;as)</code></pre></div>
+<p>We use <code>Desc</code> method before <code>Find</code> will lead the results have a order from largest to smallest depends on the value of <code>balance</code>.</p>
+
+<p>You must pass a pointer of <code>slice</code> type variable as first parameter to method <code>Find</code>. It accepts second parameter as query condition as well.</p>
+
+<h3 id="optimistic-locking">Optimistic Locking</h3>
+
+<p>Optimistic Locking is a feature powered by xorm, and by adding <code>version</code> in field tag to enable it. That field will increase by 1 every time you update the record. This can make sure only one change happens at one time when your application is multithreading, and returns error when the operation is outdated.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>This post is the part 1 of xorm, code is basic and straightforward to make as simple as possible. Therefore, a bad usage exists in code(pointed in source file).</p>
+
+<p>Sample code is a complete application and you can play with it. Also, make some changes to see how its behave changes.</p>
+
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "landofunknown" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+    </main>
+
+    
+
+  <script src="https://unknwon.io/js/app.js"></script>
+  
+  </body>
+</html>

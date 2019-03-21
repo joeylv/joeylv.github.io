@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Jiahua Chen">
+    <meta name="description" content="https://unknwon.io/">
+    <meta name="keywords" content="blog,developer,personal">
+    
+    <meta property="og:site_name" content="UNKNWON">
+    <meta property="og:title" content="
+  Setup VIM for Go development - UNKNWON
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://unknwon.io/posts/140704_setup-vim-for-go-development/">
+    <meta property="og:image" content="https://unknwon.io/&lt;no value&gt;">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="https://unknwon.io/posts/140704_setup-vim-for-go-development/">
+    <meta name="twitter:image" content="https://unknwon.io/&lt;no value&gt;">
+
+    <base href="https://unknwon.io/">
+    <title>
+  Setup VIM for Go development - UNKNWON
+</title>
+
+    <link rel="canonical" href="https://unknwon.io/posts/140704_setup-vim-for-go-development/">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="//cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
+    <link rel="stylesheet" href="https://unknwon.io/css/style.min.css">
+
+    
+
+    
+      <link rel="stylesheet" href="https://unknwon.io/css/custom.css">
+    
+
+    <link rel="icon" type="image/png" href="https://unknwon.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://unknwon.io/images/favicon-16x16.png" sizes="16x16">
+
+    
+
+    <meta name="generator" content="Hugo 0.50" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">UNKNWON</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="https://unknwon.io/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="https://unknwon.io/about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">Setup VIM for Go development</h1>
+      <h2 class="date">July 4, 2014</h2>
+
+      
+    </header>
+
+    
+
+<p>This post is for someone like me who just get started with VIM, and because the original plugin author doesn&rsquo;t given detailed steps about how to setup his awesome work, here I am.</p>
+
+<p><strong>NOTICE</strong> This is not a post about how to install Go.</p>
+
+<p>VIM plugin we use: <a href="https://github.com/fatih/vim-go">github.com/fatih/vim-go</a></p>
+
+<h3 id="install-pathogen">Install Pathogen</h3>
+
+<p>Pathogen is a plugin manager of VIM, which tons of plugins support it. So, one time forever, let&rsquo;s install it.</p>
+
+<ol>
+<li>Go to <a href="http://www.vim.org/scripts/script.php?script_id=2332">Pathogen home page</a>, find the ZIP archive of package.</li>
+<li>Download and unzip, you&rsquo;ll have a directory called <code>autoload</code> put the file named <code>pathogen.vim</code> to <code>~/.vim/autoload/pathogen.vim</code>.</li>
+<li>Edit <code>~/.vimrc</code> file and add <code>call pathogen#infect()</code> to the top.</li>
+</ol>
+
+<h3 id="install-vim-go">Install VIM-GO</h3>
+
+<p>Now, let&rsquo;s install plugins we want.</p>
+
+<ol>
+<li>Get into directory <code>~/.vim/bundle</code> then execute <code>git clone https://github.com/fatih/vim-go.git</code>.</li>
+<li>Edit <code>~/.vimrc</code> file and add following content(the last line is for not auto-installing missing packages, which may need long time):</li>
+</ol>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4">syntax enable
+filetype plugin on
+set number
+let g:go_disable_autoinstall = 0
+
+&#34; Highlight
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1</pre></div>
+<ol>
+<li>Great, now you can follow some instructions on <a href="https://github.com/fatih/vim-go">github.com/fatih/vim-go</a> to custom. Note that use <code>&lt;C-x&gt;&lt;C-o&gt;</code> call code completion, and better call it after you type <code>.</code>.</li>
+</ol>
+
+<h3 id="install-neocomplete">Install neocomplete</h3>
+
+<p>This is the plugin gives you real-time code completion, but it has special requirements for your VIM, see  <a href="https://github.com/Shougo/neocomplete.vim">github.com/Shougo/neocomplete.vim</a> for more details.</p>
+
+<ol>
+<li>Get into directory <code>~/.vim/bundle</code> and execute <code>git clone https://github.com/Shougo/neocomplete.vim.git</code>.</li>
+<li>Edit <code>~/.vimrc</code> file and add line <code>let g:neocomplete#enable_at_startup = 1</code>. Now the real-time feature will be enabled automatically every time you start your VIM.</li>
+</ol>
+
+<h3 id="install-molokai-theme">Install molokai theme</h3>
+
+<p>The same author wrote a molokai theme for VIM: <a href="https://github.com/fatih/molokai">github.com/fatih/molokai</a>.</p>
+
+<p>To install it, just download his <code>molokai.vim</code> and put it into <code>~/.vim/colors</code> . Then add <code>colorscheme molokai</code> to your <code>~/.vimrc</code> file.</p>
+
+<p><img src="/img/140704/201407020359034.png" alt="" /></p>
+
+<h3 id="install-tagbar">Install tagbar</h3>
+
+<p>This one is optional, but I installed it just because it looks so cool!</p>
+
+<ol>
+<li>First of all, you have to install <code>ctags</code>, I use Mac so just simply <code>brew install ctags</code>.</li>
+<li>Then execute <code>go get -u github.com/jstemmer/gotags</code> to install Go parser.</li>
+<li>Add following lines to your <code>~/.vimrc</code> file:</li>
+</ol>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4">let g:tagbar_type_go = {
+    \ &#39;ctagstype&#39; : &#39;go&#39;,
+    \ &#39;kinds&#39;     : [
+        \ &#39;p:package&#39;,
+        \ &#39;i:imports:1&#39;,
+        \ &#39;c:constants&#39;,
+        \ &#39;v:variables&#39;,
+        \ &#39;t:types&#39;,
+        \ &#39;n:interfaces&#39;,
+        \ &#39;w:fields&#39;,
+        \ &#39;e:embedded&#39;,
+        \ &#39;m:methods&#39;,
+        \ &#39;r:constructor&#39;,
+        \ &#39;f:functions&#39;
+    \ ],
+    \ &#39;sro&#39; : &#39;.&#39;,
+    \ &#39;kind2scope&#39; : {
+        \ &#39;t&#39; : &#39;ctype&#39;,
+        \ &#39;n&#39; : &#39;ntype&#39;
+    \ },
+    \ &#39;scope2kind&#39; : {
+        \ &#39;ctype&#39; : &#39;t&#39;,
+        \ &#39;ntype&#39; : &#39;n&#39;
+    \ },
+    \ &#39;ctagsbin&#39;  : &#39;gotags&#39;,
+    \ &#39;ctagsargs&#39; : &#39;-sort -silent&#39;
+\ }</pre></div>
+<ol>
+<li>Just like install other plugins, get into <code>~/.vim/bundle</code> and execute <code>git clone https://github.com/majutsushi/tagbar.git</code>.</li>
+<li>Edit <code>~/.vimrc</code> file and add line <code>nmap &lt;F8&gt; :TagbarToggle&lt;CR&gt;</code>. This is a key mapping, which allows you use <code>F8</code> to enable/disable the feature.</li>
+</ol>
+
+<p><img src="/img/140704/201407020405489.png" alt="" /></p>
+
+<h3 id="install-file-browser-nerdtree">Install file browser nerdtree</h3>
+
+<ol>
+<li>Get into <code>~/.vim/bundle</code> and execute <code>git clone https://github.com/scrooloose/nerdtree.git</code>.</li>
+<li>Edit <code>~/.vimrc</code> and add line <code>map &lt;C-n&gt; :NERDTreeToggle&lt;CR&gt;</code>. Now you can press <code>&lt;Ctrl+n&gt;</code> to enable/disable this feature.</li>
+</ol>
+
+<p>Awesome work!</p>
+
+<p><img src="/img/140704/201407030213312.png" alt="" /></p>
+
+<h2 id="summary">Summary</h2>
+
+<p>Please read VIM-GO&rsquo;s documentation for more advanced usage, this post only can help you get started.</p>
+
+<p>Good good study, day day up!</p>
+
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "landofunknown" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+    </main>
+
+    
+
+  <script src="https://unknwon.io/js/app.js"></script>
+  
+  </body>
+</html>

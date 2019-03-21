@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Jiahua Chen">
+    <meta name="description" content="https://unknwon.io/">
+    <meta name="keywords" content="blog,developer,personal">
+    
+    <meta property="og:site_name" content="UNKNWON">
+    <meta property="og:title" content="
+  Setup Gogs with HTTPS - UNKNWON
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://unknwon.io/posts/151115_setup-gogs-with-https/">
+    <meta property="og:image" content="https://unknwon.io/&lt;no value&gt;">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="https://unknwon.io/posts/151115_setup-gogs-with-https/">
+    <meta name="twitter:image" content="https://unknwon.io/&lt;no value&gt;">
+
+    <base href="https://unknwon.io/">
+    <title>
+  Setup Gogs with HTTPS - UNKNWON
+</title>
+
+    <link rel="canonical" href="https://unknwon.io/posts/151115_setup-gogs-with-https/">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="//cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
+    <link rel="stylesheet" href="https://unknwon.io/css/style.min.css">
+
+    
+
+    
+      <link rel="stylesheet" href="https://unknwon.io/css/custom.css">
+    
+
+    <link rel="icon" type="image/png" href="https://unknwon.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://unknwon.io/images/favicon-16x16.png" sizes="16x16">
+
+    
+
+    <meta name="generator" content="Hugo 0.50" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">UNKNWON</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="https://unknwon.io/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="https://unknwon.io/about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">Setup Gogs with HTTPS</h1>
+      <h2 class="date">November 15, 2015</h2>
+
+      
+    </header>
+
+    
+
+<p>There are two ways to use HTTPS for Gogs based on the way you choose to deploy:</p>
+
+<ol>
+<li>Reverse proxy, e.g. NGINX, Caddy</li>
+<li>Expose Gogs on the internet directly</li>
+</ol>
+
+<p>And there are two types of HTTPS certificates: real and pretend to be real.</p>
+
+<p>So, let&rsquo;s talk about how to get your HTTPS certificates.</p>
+
+<h3 id="obtain-https-certificates">Obtain HTTPS Certificates</h3>
+
+<ol>
+<li>Buy business version (OH PLEASE!!! Donate a million or two to Gogs project 😊)</li>
+<li>Apply free version from <a href="https://letsencrypt.org/">Let&rsquo;s Encrypt</a> or <a href="https://www.startssl.com/">StartSSL</a></li>
+<li>Self-signed</li>
+</ol>
+
+<p>You can Google (I just happened to be lazy) about how to get the first two versions of certificates. There are also some tools can generate self-signed certificates, but in this article, I&rsquo;m going to talk about how to use Gogs to generate them.</p>
+
+<p>First of all, you have to build Gogs with build tags <code>cert</code> (official binaries are included this tag by default).</p>
+
+<p>After that, execute the following command is all you need:</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ ./gogs cert -ca=true -duration=8760h0m0s -host=myhost.example.com</pre></div>
+<p>Don&rsquo;t forget to replace with your own domain (Wait, did you just say that you DO NOT OWN ONE? <a href="https://www.godaddy.com/">Go buy it</a>!)</p>
+
+<p>OK, now you should have two new files in the current directory: <code>cert.pem</code> and <code>key.pem</code>.</p>
+
+<h3 id="config-https-certificates">Config HTTPS Certificates</h3>
+
+<p>I&rsquo;ve mentioned that there are two ways to config HTTPS for Gogs.</p>
+
+<p>If you&rsquo;re using reverse proxy, all you need to do on Gogs&rsquo;s configuration is making sure your <code>ROOT_URL</code> is using a HTTPS URL, such as <code>https://try.gogs.io</code>, and</p>
+
+<p>NOTHING ELSE!
+NOTHING ELSE!
+NOTHING ELSE!</p>
+
+<p>For NGINX, see example below:</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4">server {
+    listen 443 ssl;
+    server_name try.gogs.io;
+    ssl_certificate path/to/cert.pem;
+    ssl_certificate_key path/to/key.pem;
+
+    location / {
+        proxy_set_header  X-Real-IP  $remote_addr;
+        proxy_pass http://localhost:3000$request_uri;
+    }
+}
+
+# Redirect HTTP requests to HTTPS
+server {
+    listen 80;
+    server_name try.gogs.io;
+    return 301 https://$host$request_uri;
+}</pre></div>
+<p>Look at it! Gogs still starts as normal HTTP! Let NGINX do all the dirty works!!!</p>
+
+<p>Maybe I&rsquo;m not so clear, but I believe you get the point&hellip;</p>
+
+<p>Great, see how to do the same thing with Caddy:</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4">https://try.gogs.io {
+    proxy / localhost:3001
+    tls path/to/cert.pem path/to/key.pem
+}
+
+# Redirect HTTP requests to HTTPS
+http://try.gogs.io {
+    redir https://try.gogs.io{uri} 301
+}</pre></div>
+<p>It&rsquo;s so damn obvious in Caddy!</p>
+
+<p>Of course, I&rsquo;m not saying expose Gogs directly on the internet is bad, you have your ways of doing things. Then, change the following configuration in your custom <code>app.ini</code> file:</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#fff;font-weight:bold">[server]</span>
+<span style="color:#007f7f">PROTOCOL</span> = <span style="color:#0ff;font-weight:bold">https</span>
+<span style="color:#007f7f">ROOT_URL</span> = <span style="color:#0ff;font-weight:bold">https://try.gogs.io/</span>
+<span style="color:#007f7f">CERT_FILE</span> = <span style="color:#0ff;font-weight:bold">path/to/cert.pem</span>
+<span style="color:#007f7f">KEY_FILE</span> = <span style="color:#0ff;font-weight:bold">path/to/key.pem</span></code></pre></div>
+<p>(I have to say Gogs itself has the least lines of configuration 😂)</p>
+
+<p>Well done!</p>
+
+<p>If you&rsquo;re using real certificates, a green nice locker will show near the URL bar in Chrome. Otherwise, an ugly red sad face is taking the place.</p>
+
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "landofunknown" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+    </main>
+
+    
+
+  <script src="https://unknwon.io/js/app.js"></script>
+  
+  </body>
+</html>
