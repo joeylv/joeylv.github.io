@@ -1,19 +1,19 @@
 #Site settings
-title: Crow Home
-SEOTitle: 王泽远的博客 | Crow's Blog
+title: Joey Home
+SEOTitle: 博客 | Crow's Blog
 header-img: img/mybg.jpeg
 email: wwwzeyuan@gmail.com
 description: "一个后台程序员的练级之路"
-keyword: "Crow,Blog,后台,服务器,大数据,Pattie的男朋友"
-url: "https://crowhawk.github.io"              # your host, for absolute URL
+keyword: "Blog,Java,JVM,JUC,GC,后台,服务器,大数据"
+url: "https://joeylv.github.io"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
 
 
 # SNS settings
 RSS: false
-zhihu_username:     martin-crow
-github_username:    crowhawk
+zhihu_username:     joeylv
+github_username:    joeylv
 #twitter_username:  huxpro
 #facebook_username:  huxpro
 # linkedin_username:  firstname-lastname-idxxxx
