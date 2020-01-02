@@ -64,7 +64,7 @@ ga_domain: huangxuan.me
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "唯代码与Pattie不可辜负<br>认真做技术，早日结婚"
+sidebar-about-description: "唯代码不可辜负"
 sidebar-avatar: /img/avatar.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
