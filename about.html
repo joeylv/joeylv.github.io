@@ -1,128 +1,132 @@
-<!DOCTYPE html>
-<html lang="en-us">
+---
+layout: page
+title: "About"
+description: "Hey, this is Crow."
+#header-img: ""
+---
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Language Selector -->
+<select class="sel-lang" onchange="onLanChange(this.options[this.options.selectedIndex].value)">
+    <option value="0" selected> 中文 Chinese</option>
+</select>
 
-    <meta name="author" content="Jiahua Chen">
-    <meta name="description" content="https://unknwon.io/">
-    <meta name="keywords" content="blog,developer,personal">
-    
-    <meta property="og:site_name" content="UNKNWON">
-    <meta property="og:title" content="
-  About - UNKNWON
-">
-    <meta property="og:description" content="">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://unknwon.io/about/">
-    <meta property="og:image" content="https://unknwon.io/">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="https://unknwon.io/about/">
-    <meta name="twitter:image" content="https://unknwon.io/">
+<!-- Chinese Version -->
+<div class="zh post-container">
 
-    <base href="https://unknwon.io/">
-    <title>
-  About - UNKNWON
-</title>
+    <!--copied from markdown -->
+    <blockquote><p>唯代码与Pattie不可辜负<br>
+        认真做技术，早日结婚</p></blockquote>
 
-    <link rel="canonical" href="https://unknwon.io/about/">
-    
-    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
-      <link rel="stylesheet" href="https://necolas.github.io/normalize.css/latest/normalize.css">
-    <link rel="stylesheet" href="https://unknwon.io/css/style.min.css">
+    <p>Hey，我是<strong>王泽远</strong>，Java程序员，华中科技大学电子信息工程专业12级本科毕业，信息与通信工程专业16级硕士在读，目前实习于阿里巴巴菜鸟国际物流技术团队。</p>
+    <p>有大数据开发和网站后台开发经验，将来会寻求Java后台方向的工作。华中科技大学信息与通信工程学院电子系主页作者； 前 Intel 上海BDT 团队intern，主要工作内容为Spark开发， 实习期间获 Intel Cloud and Big Data Engineering Team Recognition Award。</p>
+    <p>兴趣是篮球和狼人杀，特长是吹逼。初二初三时作为校队主力拿到了校史上仅有的两个县比赛冠军，后来沉迷学习球技渐渐荒废。每周末都会去参加狼人杀面杀聚会，不喜欢网杀。</p>
 
-    
-
-    
-      <link rel="stylesheet" href="https://unknwon.io/css/custom.css">
-    
-
-    <link rel="icon" type="image/png" href="https://unknwon.io/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://unknwon.io/images/favicon-16x16.png" sizes="16x16">
-
-    
-
-    <meta name="generator" content="Hugo 0.50" />
-  </head>
-
-  <body class="">
-    <main class="wrapper">
-      <nav class="navigation">
-  <section class="container">
-    <a class="navigation-title" href="/">UNKNWON</a>
-    <input type="checkbox" id="menu-control"/>
-    <label class="menu-mobile  float-right " for="menu-control">
-      <span class="btn-mobile  float-right ">&#9776;</span>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item  align-center ">
-              <a class="navigation-link" href="https://unknwon.io/posts">Blog</a>
-            </li>
-          
-            <li class="navigation-item  align-center ">
-              <a class="navigation-link" href="https://unknwon.io/about">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    </label>
-  </section>
-</nav>
+</div>
 
 
-      <div class="content">
-        
-  <section class="container page">
-  <article>
-    <header>
-      <h1>About</h1>
-    </header>
+<!-- Handle Language Change -->
+<script type="text/javascript">
+    // get nodes
+    var $zh = document.querySelector(".zh");
+    var $en = document.querySelector(".en");
+    var $select = document.querySelector("select");
 
-    <hr />
+    // bind hashchange event
+    window.addEventListener('hashchange', _render);
 
-<p>Welcome!</p>
+    // handle render
+    function _render() {
+        var _hash = window.location.hash;
+        // en
+        if (_hash == "#en") {
+            $select.selectedIndex = 1;
+            $en.style.display = "block";
+            $zh.style.display = "none";
+            // zh by default
+        } else {
+            // not trigger onChange, otherwise cause a loop call.
+            $select.selectedIndex = 0;
+            $zh.style.display = "block";
+            $en.style.display = "none";
+        }
+    }
 
-<p>I&rsquo;m a software engineer who emphasizes on good design and code quality.</p>
+    // handle select change
+    function onLanChange(index) {
+        if (index == 0) {
+            window.location.hash = "#zh"
+        } else {
+            window.location.hash = "#en"
+        }
+    }
 
-<p>I love using Go and did a lot work with it, some of them including:</p>
-
-<ul>
-<li>The <a href="https://gogs.io">Gogs</a> project: A painless self-hosted Git service.</li>
-<li>The <a href="https://go-macaron.com">Macaron</a> web framework: A high productive and modular web framework in Go.</li>
-<li>The <a href="https://peachdocs.org">Peach Docs</a> tool: A web server for multi-language, real-time synchronization and searchable documentation.</li>
-<li>The <a href="https://ini.unknwon.io">go-ini/ini</a> library: A fantastic package for INI manipulations in Go.</li>
-<li>And many popular Go packages, please checkout my <a href="https://github.com/Unknwon">GitHub</a> profile.</li>
-</ul>
-
-<p>Speaking of my interest fields of study, my learning list from now on to end of 2019 is as follows:</p>
-
-<ol>
-<li>Distributed Systems</li>
-<li>TypeScript</li>
-<li>Rust</li>
-<li>Machine learning</li>
-<li>Microservices</li>
-<li>Blockchain</li>
-</ol>
-
-<p>If you are curious about how this website is built, it is made possible by <a href="https://gohugo.io">Hugo</a> and the theme <a href="https://github.com/naro143/hugo-coder-portfolio">Coder Portfolio</a>.</p>
-
-<p>A great man once said, &ldquo;Good good study, day day up!&rdquo;.</p>
-
-  </article>
-</section>
+    // init
+    _render();
+</script>
 
 
-      </div>
-      
-    </main>
+{% if site.duoshuo_username %}
+<!-- 多说评论框 start -->
+<div class="comment">
+    <!-- This id is used for indexing my loss comments forcedly -->
+    <div class="ds-thread"
+         {% if site.duoshuo_username==
+    "crowhawk" %}
+    {% else %}
+    <!-- U can just use this key generated to index comments at page about -->
+    data-thread-key="{{site.duoshuo_username}}/about"
+    {% endif %}
 
-    
+    data-title="{{page.title}}"
+    data-url="{{site.url}}/about/">
+</div>
+</div>
+<!-- 多说评论框 end -->
 
-  <script src="https://unknwon.io/js/app.js"></script>
-  
-  </body>
-</html>
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    // dynamic User hacking by Hux
+    var _user = '{{site.duoshuo_username}}';
+
+    // duoshuo comment query.
+    var duoshuoQuery = {short_name: _user};
+    (function () {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';
+        ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+            || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+{% endif %}
+
+
+{% if site.disqus_username %}
+<!-- disqus 评论框 start -->
+<div class="comment">
+    <div id="disqus_thread" class="disqus-thread">
+
+    </div>
+</div>
+<!-- disqus 评论框 end -->
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "{{site.disqus_username}}";
+    var disqus_identifier = "{{site.disqus_username}}/{{page.url}}";
+    var disqus_url = "{{site.url}}{{page.url}}";
+
+    (function () {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+{% endif %}
